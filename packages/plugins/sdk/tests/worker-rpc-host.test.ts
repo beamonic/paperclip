@@ -1231,13 +1231,6 @@ describe("Durable lifecycle inbox RPC", () => {
 });
 
 describe("worker http.fetch response rebuild", () => {
-  // The host serializes the upstream reply as
-  // `{ status, statusText, headers, body }`. The worker rebuilds a `Response`
-  // from those fields. The Fetch spec forbids a body on null-body
-  // statuses (204, 205, 304), so a plain `new Response(body)` throws for a
-  // successful 204 No Content and the plugin reports a landed write as failed.
-  // The shim must drop the serialized body for those statuses, matching what
-  // global `fetch` returns for the same upstream reply.
   const hostReplies = new Map<string, { status: number; statusText: string; headers: Record<string, string>; body: string }>([
     ["https://example.test/write-204", { status: 204, statusText: "No Content", headers: {}, body: "" }],
     ["https://example.test/write-205", { status: 205, statusText: "Reset Content", headers: {}, body: "" }],
